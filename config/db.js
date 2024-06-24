@@ -8,12 +8,13 @@ const pool = new Pool({
   database: process.env.DB_NAME,
   password: process.env.DB_PASSWORD,
   port: process.env.DB_PORT,
- dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false
-    }
-  },
+  ssl: {
+    rejectUnauthorized: false // Note: Set to true for production with a valid certificate
+  }
+});
+pool.on('error', (err, client) => {
+  console.error('Unexpected error on idle client', err); // Log errors
+  process.exit(-1);
 });
 
 module.exports = pool;
